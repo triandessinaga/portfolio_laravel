@@ -1,0 +1,64 @@
+@extends('layouts.app')
+
+@section('title', 'Edit Project')
+
+@section('content')
+    <div class="container mt-5">
+        <h1>Edit Project</h1>
+        
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
+        <form action="{{ route('projects.update', $project) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $project->title) }}" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Web Design" {{ old('category', $project->category) == 'Web Design' ? 'selected' : '' }}>Web Design</option>
+                    <option value="Graphic Design" {{ old('category', $project->category) == 'Graphic Design' ? 'selected' : '' }}>Graphic Design</option>
+                    <option value="Photography" {{ old('category', $project->category) == 'Photography' ? 'selected' : '' }}>Photography</option>
+                    <option value="UI/UX" {{ old('category', $project->category) == 'UI/UX' ? 'selected' : '' }}>UI/UX</option>
+                    <option value="Illustration" {{ old('category', $project->category) == 'Illustration' ? 'selected' : '' }}>Illustration</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required>{{ old('description', $project->description) }}</textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="image" class="form-label">Project Image</label>
+                <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                <div class="form-text">Leave empty to keep current image</div>
+                
+                @if ($project->image)
+                    <div class="mt-2">
+                        <p>Current Image:</p>
+                        <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}" class="img-thumbnail" style="max-height: 200px">
+                    </div>
+                @endif
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Update Project</button>
+                <a href="{{ route('projects.index') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+@endsection
